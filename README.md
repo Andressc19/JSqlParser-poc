@@ -13,10 +13,10 @@ This is a Proof of Concept (PoC) tool that reads a SQL DDL file and maps its str
 ## Workflow
 ```mermaid
 flowchart TD
-    A([Read SQL file hr.sql])
+    A([Read path SQL file])
     A --> B[Parse schema using SqlSchemaParser]
-    B --> C[Get list of tables from Schema]
-    C --> D[Filter tables by allowed names employees, departments]
+    B --> C[Show the list of tables from Schema]
+    C --> D[Request tables to show]
     D --> E[Print filtered tables as ASCII]
     E --> F[End]
 ```
