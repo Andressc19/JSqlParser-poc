@@ -1,0 +1,49 @@
+classDiagram
+    class Schema {
+        -String name
+        -Map~String, Table~ tables
+        +addTable(Table table)
+        +getTables() Collection~Table~
+    }
+
+    class Table {
+        -String name
+        -List~Column~ columns
+        -PrimaryKey primaryKey
+        -List~ForeignKey~ foreignKeys
+        -List~Unique~ uniqueConstraints
+        +addColumn(Column column)
+        +addForeignKey(ForeignKey fk)
+        +addUniqueConstraint(Unique uc)
+        +isColumnUnique(String columnName) boolean
+        +getAsciiTable() String
+    }
+
+    class Column {
+        -String name
+        -DataType type
+        -Long length
+        -boolean nullable
+    }
+
+    class PrimaryKey {
+        -List~String~ columnNames
+    }
+
+    class ForeignKey {
+        -List~String~ columnNames
+        -String referencedTable
+        -List~String~ referencedColumns
+    }
+
+    class Unique {
+        -String name
+        -List~String~ columnNames
+    }
+
+    %% Relaciones
+    Schema "1" --> "*" Table : contains
+    Table "1" --> "*" Column : has
+    Table "1" --> "1" PrimaryKey : has
+    Table "1" --> "*" ForeignKey : has
+    Table "1" --> "*" Unique : has

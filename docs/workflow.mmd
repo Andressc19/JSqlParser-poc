@@ -1,0 +1,7 @@
+flowchart TD
+    A([Read SQL file hr.sql])
+    A --> B[Parse schema using SqlSchemaParser]
+    B --> C[Get list of tables from Schema]
+    C --> D[Filter tables by allowed names employees, departments]
+    D --> E[Print filtered tables as ASCII]
+    E --> F[End]
