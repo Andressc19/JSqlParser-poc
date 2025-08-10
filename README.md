@@ -28,4 +28,4 @@ flowchart TD
 3. Run the `Main` class:
    ```bash
    mvn compile exec:java -Dexec.mainClass=org.sqlparser.Main
-📺 Also you can check a video usage on [Demo video]([docs/JSqlParserPoC_Demo.mp4](https://github.com/Andressc19/JSqlParser-poc/blob/main/docs/JSqlParser_Usage.mkv))
+📺 Also you can check a video usage on [Demo video](https://github.com/Andressc19/JSqlParser-poc/blob/main/docs/JSqlParser_Usage.mkv)
