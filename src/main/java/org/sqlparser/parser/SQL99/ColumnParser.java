@@ -6,6 +6,7 @@ import org.sqlparser.domain.Column;
 import org.sqlparser.enums.DataType;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public final class ColumnParser {
 
@@ -13,12 +14,23 @@ public final class ColumnParser {
         String name = colDef.getColumnName();
         DataType dataType = parseDataType(colDef);
         Long length = parseLength(colDef, dataType);
-        boolean nullable = parseNullable(colDef);
+        boolean primaryKey = parsePrimaryKey(colDef);
+        boolean nullable = !primaryKey && parseNullable(colDef);
         boolean unique = parseUnique(colDef);
-
-        return new Column(name, dataType, length, nullable);
+        
+        return new Column(name, dataType, length, nullable, primaryKey, unique);
     }
-
+    
+    /** Determines if column is primary key **/
+    private static boolean parsePrimaryKey(ColumnDefinition colDef) {
+        List<String> specs = colDef.getColumnSpecs();
+        if (specs == null || specs.size() < 2) return false;
+        
+        return IntStream.range(0, specs.size() - 1)
+            .anyMatch(i -> (specs.get(i) + " " + specs.get(i + 1))
+                .equalsIgnoreCase("PRIMARY KEY"));
+    }
+    
     /** Removes length/precision from type and returns only base type */
     private static DataType parseDataType(ColumnDefinition colDef) {
         ColDataType colDataType = colDef.getColDataType();
@@ -45,8 +57,18 @@ public final class ColumnParser {
     /** Determines if the column is nullable */
     private static boolean parseNullable(ColumnDefinition colDef) {
         List<String> specs = colDef.getColumnSpecs();
-        return specs == null || !specs.contains("NOT NULL");
-    }
+        if (specs == null || specs.isEmpty()) return true;
+        
+        List<String> cleanSpecs = specs.stream()
+            .filter(s -> s != null && !s.trim().isEmpty())
+            .map(String::toUpperCase)
+            .toList();
+        
+        boolean hasNotNull = IntStream.range(0, cleanSpecs.size() - 1)
+            .anyMatch(i -> cleanSpecs.get(i).equals("NOT") && cleanSpecs.get(i + 1).equals("NULL"));
+		
+		return !hasNotNull;
+	}
 
     /** Determines if the column has UNIQUE constraint */
     private static boolean parseUnique(ColumnDefinition colDef) {

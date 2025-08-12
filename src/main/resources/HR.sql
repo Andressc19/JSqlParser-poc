@@ -11,7 +11,7 @@
 -- TABLE: regions
 -- ==============================
 CREATE TABLE regions (
-    region_id      INT PRIMARY KEY,
+    region_id      INT      PRIMARY KEY,
     region_name    VARCHAR(25)
 );
 
