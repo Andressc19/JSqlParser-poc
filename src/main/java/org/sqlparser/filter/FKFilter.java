@@ -1,5 +1,6 @@
 package org.sqlparser.filter;
 
+import org.sqlparser.domain.Column;
 import org.sqlparser.domain.constraints.ForeignKey;
 import org.sqlparser.domain.Table;
 
@@ -25,10 +26,10 @@ public class FKFilter {
             Set<String> fkColumnsToRemove = new HashSet<>();
 
             for (ForeignKey fk : table.getForeignKeys()) {
-                if (selectedTableNames.contains(fk.getReferencedTable())) {
+                if (selectedTableNames.contains(fk.getTargetTable().getName())) {
                     fksFiltered.add(fk);
                 } else {
-                    fkColumnsToRemove.addAll(fk.getColumnNames());
+                    fkColumnsToRemove.addAll(fk.getSourceColumns().stream().map(Column::getName).toList());
                 }
             }
 

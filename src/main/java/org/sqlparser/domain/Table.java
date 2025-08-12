@@ -1,6 +1,7 @@
 package org.sqlparser.domain;
 
 import lombok.Data;
+import lombok.ToString;
 import org.sqlparser.domain.constraints.ForeignKey;
 import org.sqlparser.domain.constraints.PrimaryKey;
 import org.sqlparser.domain.constraints.Unique;
@@ -14,7 +15,9 @@ public class Table {
     private String name;
     private List<Column> columns = new ArrayList<>();
     private PrimaryKey primaryKey;
+    @ToString.Exclude
     private List<ForeignKey> foreignKeys = new ArrayList<>();
+    @ToString.Exclude
     private List<Unique> uniqueConstraints = new ArrayList<>();
     
     public Table(String name) {
@@ -23,6 +26,10 @@ public class Table {
     
     public void addColumn(Column column) {
         columns.add(column);
+    }
+    
+    public void addForeignKey(ForeignKey foreignKey) {
+        foreignKeys.add(foreignKey);
     }
     
     public boolean isColumnUnique(String columnName) {

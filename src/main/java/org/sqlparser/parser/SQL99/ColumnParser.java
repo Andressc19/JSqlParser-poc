@@ -14,11 +14,18 @@ public final class ColumnParser {
         String name = colDef.getColumnName();
         DataType dataType = parseDataType(colDef);
         Long length = parseLength(colDef, dataType);
+        
         boolean primaryKey = parsePrimaryKey(colDef);
         boolean nullable = !primaryKey && parseNullable(colDef);
         boolean unique = parseUnique(colDef);
+        boolean foreignKey = parseConstraint(colDef);
         
-        return new Column(name, dataType, length, nullable, primaryKey, unique);
+        
+        return new Column(name, dataType, length, nullable, primaryKey, unique, foreignKey );
+    }
+    
+    private static boolean parseConstraint(ColumnDefinition colDef) {
+        return true;
     }
     
     /** Determines if column is primary key **/
@@ -75,4 +82,5 @@ public final class ColumnParser {
         List<String> specs = colDef.getColumnSpecs();
         return specs != null && specs.contains("UNIQUE");
     }
+ 
 }

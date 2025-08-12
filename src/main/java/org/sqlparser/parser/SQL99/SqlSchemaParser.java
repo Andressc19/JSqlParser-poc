@@ -12,35 +12,49 @@ import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.create.table.*;
 
 public class SqlSchemaParser {
-
-    /**
-     * Reads a SQL file containing CREATE TABLE statements, removes single-line comments,
-     * and parses the content using JSqlParser to produce a {@link Schema} containing the parsed tables.
-     * The actual parsing of each table is delegated to {@link TableParser#parseTable(CreateTable)}.
-     *
-     * @param filePath   the path to the SQL file containing CREATE TABLE statements
-     * @param schemaName the name to assign to the resulting {@link Schema}
-     * @return a {@link Schema} object populated with tables parsed from the SQL file
-     * @throws IOException if an I/O error occurs reading the file
-     * @throws Exception   if an error occurs during SQL parsing
-     */
-    public static Schema parseSchemaFromFile(String filePath, String schemaName) throws IOException, Exception {
-        String sqlContent = Files.readString(Paths.get(filePath));
-        Schema schema = new Schema(schemaName);
-        String cleanSqlContent = cleanComments(sqlContent);
-
-        List<Statement> statements = CCJSqlParserUtil.parseStatements(cleanSqlContent);
-
-        for (Statement stmt : statements) {
-            if (stmt instanceof CreateTable createTable) {
-                Table table = TableParser.parseTable(createTable);
-                schema.addTable(table);
-            }
-        }
-        return schema;
-    }
-
-    private static String cleanComments(String sqlContent) {
-        return sqlContent.replaceAll("(?m)^\\s*--.*(?:\\r?\\n)?", "");
-    }
+	
+	/**
+	 * Parses a SQL schema from a file and returns a Schema object.
+	 * It reads the SQL file, removes comments, parses the statements,
+	 * and builds the schema with tables and foreign keys.
+	 *
+	 * @param filePath   Path to the SQL file.
+	 * @param schemaName Name for the schema.
+	 * @return Schema object representing the parsed schema.
+	 * @throws IOException If the file cannot be read.
+	 * @throws Exception   If parsing fails.
+	 */
+	public static Schema parseSchemaFromFile(String filePath, String schemaName) throws IOException, Exception {
+		String sqlContent = Files.readString(Paths.get(filePath));
+		Schema schema = new Schema(schemaName);
+		String cleanSqlContent = cleanComments(sqlContent);
+		
+		List<Statement> statements = CCJSqlParserUtil.parseStatements(cleanSqlContent);
+		
+		for (Statement stmt : statements) {
+			if (stmt instanceof CreateTable createTable) {
+				Table table = TableParser.parseTableWithoutForeignKeys(createTable);
+				schema.addTable(table);
+			}
+		}
+		
+		for (Statement stmt : statements) {
+			if (stmt instanceof CreateTable createTable) {
+				Table table = schema.getTables().get(createTable.getTable().getName());
+				TableParser.addForeignKeys(table, createTable, schema);
+			}
+		}
+		
+		return schema;
+	}
+	
+	/**
+	 * Removes SQL comments from the provided SQL content.
+	 *
+	 * @param sqlContent SQL content as a string.
+	 * @return SQL content without comments.
+	 */
+	private static String cleanComments(String sqlContent) {
+		return sqlContent.replaceAll("(?m)^\\s*--.*(?:\\r?\\n)?", "");
+	}
 }

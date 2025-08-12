@@ -13,8 +13,7 @@ public class Schema {
 
     private String name;
     private Map<String, Table> tables = new HashMap<>();
-
-
+    
     public Schema(String name) {
         this.name = name;
     }
@@ -23,7 +22,8 @@ public class Schema {
         tables.put(table.getName(), table);
     }
 
-    public Collection<Table> getTables() {
+    public Collection<Table> getTablesValues() {
         return tables.values();
     }
+    
 }

@@ -1,34 +1,96 @@
 package org.sqlparser.parser.SQL99;
 
 import net.sf.jsqlparser.statement.create.table.CreateTable;
+import net.sf.jsqlparser.statement.create.table.ForeignKeyIndex;
+import net.sf.jsqlparser.statement.create.table.Index;
 import org.sqlparser.domain.Column;
+import org.sqlparser.domain.Schema;
 import org.sqlparser.domain.Table;
+import org.sqlparser.domain.constraints.ForeignKey;
 import org.sqlparser.domain.constraints.PrimaryKey;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Provides functionality to parse a JSqlParser {@link CreateTable} statement into a domain {@link Table} object.
  */
 public class TableParser {
-
-    public static Table parseTable(CreateTable createTable) {
+    
+    /** Parses a table to entities **/
+    public static Table parseTableWithoutForeignKeys(CreateTable createTable) {
         String tableName = createTable.getTable().getName();
-        PrimaryKey pk = new PrimaryKey();
         Table table = new Table(tableName);
         
-
         if (createTable.getColumnDefinitions() != null) {
-            createTable.getColumnDefinitions()
-                  .forEach(cd ->
-                      {
-                          Column cd_parsed = ColumnParser.parse(cd);
-                          if (cd_parsed.isPrimaryKey()) pk.addColumn(cd_parsed);
-                          table.addColumn(ColumnParser.parse(cd));
-                      });
+            createTable.getColumnDefinitions().forEach(cd -> {
+                Column column = ColumnParser.parse(cd);
+                if (column.isPrimaryKey()) addPrimaryKey(table, column);
+                table.addColumn(column);
+            });
         }
-        table.setPrimaryKey(pk);
-        
-        System.out.println(table.getAsciiTable());
-        
         return table;
     }
+    
+    
+    /** Set primary key to table **/
+    private static void addPrimaryKey(Table table, Column column) {
+        PrimaryKey pk = new PrimaryKey();
+        pk.addColumn(column);
+        table.setPrimaryKey(pk);
+    }
+    
+    /** Add foreign keys to table **/
+    public static void addForeignKeys(Table table, CreateTable createTable, Schema schema) {
+        List<ForeignKeyIndex> foreignKeys = getForeignIndexes(createTable.getIndexes());
+        
+        foreignKeys.forEach(fkStatement -> {
+            String targetTableName = fkStatement.getTable().getName();
+            Table targetTable = schema.getTables().get(targetTableName);
+            
+            List<String> sourceColumnNames = fkStatement.getColumns().stream()
+                .map(Index.ColumnParams::getColumnName)
+                .toList();
+            List<String> targetColumnNames = fkStatement.getReferencedColumnNames();
+            
+            if (targetTable != null) {
+                ForeignKey fk = new ForeignKey();
+                fk.setSourceTable(table);
+                fk.setTargetTable(targetTable);
+                
+                // Map source columns
+                sourceColumnNames.forEach(srcColName -> {
+                    table.getColumns().stream()
+                        .filter(c -> c.getName().equalsIgnoreCase(srcColName))
+                        .findFirst()
+                        .ifPresent(fk::addSourceColumn);
+                });
+                
+                // Map target columns
+                targetColumnNames.forEach(tgtColName -> {
+                    targetTable.getColumns().stream()
+                        .filter(c -> c.getName().equalsIgnoreCase(tgtColName))
+                        .findFirst()
+                        .ifPresent(fk::addTargetColumn);
+                });
+                
+                table.addForeignKey(fk);
+            } else {
+                System.err.println("⚠ Tabla destino no encontrada: " + targetTableName);
+            }
+        });
+    }
+    
+    /** Return the filtered foreign indexes **/
+    public static List<ForeignKeyIndex> getForeignIndexes(List<Index> indexes) {
+        if (indexes == null || indexes.isEmpty()) {
+            return Collections.emptyList();
+        }
+        
+        return indexes.stream()
+            .filter(index -> index instanceof ForeignKeyIndex)
+            .map(index -> (ForeignKeyIndex) index)
+            .toList();
+    }
+    
 }
