@@ -1,4 +1,4 @@
-package org.sqlparser.domain.constraints;
+package org.sqlparser.domain.sql.constraints;
 
 import lombok.Data;
 

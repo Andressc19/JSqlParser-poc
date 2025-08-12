@@ -3,11 +3,11 @@ package org.sqlparser.parser.SQL99;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
 import net.sf.jsqlparser.statement.create.table.ForeignKeyIndex;
 import net.sf.jsqlparser.statement.create.table.Index;
-import org.sqlparser.domain.Column;
-import org.sqlparser.domain.Schema;
-import org.sqlparser.domain.Table;
-import org.sqlparser.domain.constraints.ForeignKey;
-import org.sqlparser.domain.constraints.PrimaryKey;
+import org.sqlparser.domain.sql.Column;
+import org.sqlparser.domain.sql.Schema;
+import org.sqlparser.domain.sql.Table;
+import org.sqlparser.domain.sql.constraints.ForeignKey;
+import org.sqlparser.domain.sql.constraints.PrimaryKey;
 
 import java.util.Collections;
 import java.util.List;

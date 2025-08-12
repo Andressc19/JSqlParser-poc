@@ -1,7 +1,5 @@
 package org.sqlparser.parser.SQL99;
 
-import org.sqlparser.domain.*;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,6 +8,8 @@ import java.util.List;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.create.table.*;
+import org.sqlparser.domain.sql.Schema;
+import org.sqlparser.domain.sql.Table;
 
 public class SqlSchemaParser {
 	

@@ -1,9 +1,9 @@
-package org.sqlparser.domain.constraints;
+package org.sqlparser.domain.sql.constraints;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.sqlparser.domain.Column;
+import org.sqlparser.domain.sql.Column;
 
 import java.util.ArrayList;
 import java.util.List;

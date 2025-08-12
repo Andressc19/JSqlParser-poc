@@ -1,4 +1,4 @@
-package org.sqlparser.domain;
+package org.sqlparser.domain.sql;
 
 import lombok.Data;
 import org.sqlparser.enums.DataType;
@@ -11,7 +11,6 @@ public class Column {
 	private boolean nullable;
 	private boolean primaryKey;
 	private boolean unique;
-	private boolean foreignKey;
 	
 	public Column(
 		String name,
@@ -19,8 +18,7 @@ public class Column {
 		Long length,
 		boolean nullable,
 		boolean primaryKey,
-		boolean unique,
-		boolean foreignKey
+		boolean unique
 	) {
 		this.name = name;
 		this.type = type;
@@ -28,6 +26,5 @@ public class Column {
 		this.nullable = nullable;
 		this.primaryKey = primaryKey;
 		this.unique = unique;
-		this.foreignKey = foreignKey;
 	}
 }

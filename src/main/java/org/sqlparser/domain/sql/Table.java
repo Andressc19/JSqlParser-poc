@@ -1,10 +1,10 @@
-package org.sqlparser.domain;
+package org.sqlparser.domain.sql;
 
 import lombok.Data;
 import lombok.ToString;
-import org.sqlparser.domain.constraints.ForeignKey;
-import org.sqlparser.domain.constraints.PrimaryKey;
-import org.sqlparser.domain.constraints.Unique;
+import org.sqlparser.domain.sql.constraints.ForeignKey;
+import org.sqlparser.domain.sql.constraints.PrimaryKey;
+import org.sqlparser.domain.sql.constraints.Unique;
 
 import java.util.ArrayList;
 import java.util.List;

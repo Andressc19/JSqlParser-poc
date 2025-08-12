@@ -1,4 +1,4 @@
-package org.sqlparser.domain;
+package org.sqlparser.domain.sql;
 
 import java.util.Collection;
 import java.util.HashMap;

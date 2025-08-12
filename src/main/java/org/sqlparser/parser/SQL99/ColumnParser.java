@@ -2,7 +2,7 @@ package org.sqlparser.parser.SQL99;
 
 import net.sf.jsqlparser.statement.create.table.ColDataType;
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
-import org.sqlparser.domain.Column;
+import org.sqlparser.domain.sql.Column;
 import org.sqlparser.enums.DataType;
 
 import java.util.List;
@@ -18,14 +18,9 @@ public final class ColumnParser {
         boolean primaryKey = parsePrimaryKey(colDef);
         boolean nullable = !primaryKey && parseNullable(colDef);
         boolean unique = parseUnique(colDef);
-        boolean foreignKey = parseConstraint(colDef);
         
         
-        return new Column(name, dataType, length, nullable, primaryKey, unique, foreignKey );
-    }
-    
-    private static boolean parseConstraint(ColumnDefinition colDef) {
-        return true;
+        return new Column(name, dataType, length, nullable, primaryKey, unique );
     }
     
     /** Determines if column is primary key **/

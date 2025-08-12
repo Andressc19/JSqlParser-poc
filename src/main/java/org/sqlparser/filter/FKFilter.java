@@ -1,8 +1,8 @@
 package org.sqlparser.filter;
 
-import org.sqlparser.domain.Column;
-import org.sqlparser.domain.constraints.ForeignKey;
-import org.sqlparser.domain.Table;
+import org.sqlparser.domain.sql.Column;
+import org.sqlparser.domain.sql.constraints.ForeignKey;
+import org.sqlparser.domain.sql.Table;
 
 import java.util.*;
 
