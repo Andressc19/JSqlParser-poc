@@ -41,13 +41,13 @@ CREATE TABLE locations (
 -- ==============================
 -- TABLE: departments
 -- ==============================
-CREATE TABLE departments (
-    department_id    INT PRIMARY KEY,
-    department_name  VARCHAR(30) NOT NULL,
-    manager_id       INT,
-    location_id      INT,
-    FOREIGN KEY (location_id) REFERENCES locations(location_id)
-);
+-- CREATE TABLE departments (
+--     department_id    INT PRIMARY KEY,
+--     department_name  VARCHAR(30) NOT NULL,
+--     manager_id       INT,
+--     location_id      INT,
+--     FOREIGN KEY (location_id) REFERENCES locations(location_id)
+-- );
 
 -- ==============================
 -- TABLE: jobs
